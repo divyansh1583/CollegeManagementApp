@@ -35,13 +35,13 @@ namespace CollegeManagementAPI.Infrastructure.Implementation.Repositories
 
         }
         //getting user by email
-        public async Task<UserDetail> GetUserByEmailAsync(string email)
+        public async Task<LoginDetails> GetUserByEmailAsync(string email)
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "SELECT * FROM DC_LoginCredentials lc WHERE Email=@Email";
 
-                var result = await connection.QueryAsync<UserDetail>(query, new { Email = email });
+                var result = await connection.QueryAsync<LoginDetails>(query, new { Email = email });
 
                 return result.FirstOrDefault();
             }

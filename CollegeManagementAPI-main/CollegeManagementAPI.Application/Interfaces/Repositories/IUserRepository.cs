@@ -11,7 +11,7 @@ namespace CollegeManagementAPI.Application.Interfaces.Repositories
     {
         Task<IEnumerable<UserDetail>> GetUsersAsync();
         Task<int> InsertUserAndLoginCredentials(UserDetail userDetail);
-        Task<UserDetail> GetUserByEmailAsync(string email);
+        Task<LoginDetails> GetUserByEmailAsync(string email);
         Task<int> UpdateUserAsync(UserDetail userDetail);
         Task<int> DeleteUserAsync(int id);
     }

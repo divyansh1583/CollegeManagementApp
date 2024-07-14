@@ -22,13 +22,9 @@ export class LoginComponent {
     private loginService: LoginService
 
   ) {
-     // Subscribe to router events
-     this.router.events.pipe(
-      filter((event: any) => event instanceof NavigationStart)
-    ).subscribe(() => {
-      this.loading = true; // Set loading to true on navigation start
-    });
-   }
+    // Subscribe to router events
+
+  }
 
   loginForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -37,33 +33,21 @@ export class LoginComponent {
   getControl(value: string) {
     return this.loginForm.get(value);
   }
-  // saveForm() {
-  //   const users = JSON.parse(localStorage.getItem('users') || '[]');
-  //   const email = this.loginForm.value.email;
-  //   const password = this.loginForm.value.password;
-  //   // const user = users.find((user: any) => user.email === email && user.password === password);
-  //   if(users.email==email && users.password==password && this.loginForm.valid){
-  //     this.toastr.clear();
-  //     localStorage.setItem('login_token', 'token');
-  //     this.router.navigate(['/user']);
-  //     this.toastr.success('Login Successful', 'Success!');
-  //   }
-  //   else{
-  //     this.toastr.error('Invalid Credential!','Error');
-  //   }
 
-  // }
   login() {
+    this.loading = true; // Set loading to true when login is clicked
     this.loginDetails.email = this.loginForm.value.email!;
     this.loginDetails.password = this.loginForm.value.password!;
-    this.loginService.login(this.loginDetails).subscribe((res: any) => {
-      if (res.isSuccess) {
+    this.loginService.login(this.loginDetails).subscribe(res => {
+      this.loading = false; // Set loading to false when service is completed
+      if (res.statusCode === 200) {
+        console.log(res);
         localStorage.setItem('login_token', 'token');
         this.router.navigate(['/user']);
-        this.toastr.success(res.message);
+        this.toastr.success(res.message, res.statusCode);
       }
       else {
-        this.toastr.error('Invalid Credential!', 'Error');
+        this.toastr.error(res.message, res.statusCode);
       }
     });
   }

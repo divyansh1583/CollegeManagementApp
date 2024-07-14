@@ -2,6 +2,7 @@
 using CollegeManagementAPI.Application.Interfaces.Services;
 using CollegeManagementAPI.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using CollegeManagementAPI.Domain.Common_Models;
 
 namespace CollegeManagementAPI.net.Controllers
 {
@@ -12,7 +13,6 @@ namespace CollegeManagementAPI.net.Controllers
         private readonly IUserService _userService;
 
         public UserController(IUserService userService)
-
         {
             _userService = userService;
         }
@@ -20,31 +20,73 @@ namespace CollegeManagementAPI.net.Controllers
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _userService.GetUsersAsync());
-
+            var response = new ResponseModel
+            {
+                StatusCode = 200,
+                Data = await _userService.GetUsersAsync(),
+                Message = "Users retrieved successfully"
+            };
+            return Ok(response);
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginDetails loginDetails)
         {
             var result = await _userService.LoginUserAsync(loginDetails);
-
-            return Ok(result);
+            if (result == null || result.Password != loginDetails.Password)
+            {
+                var errorResponse = new ResponseModel
+                {
+                    StatusCode = 500,
+                    Data = null,
+                    Message = "Invalid Email or Password!"
+                };
+                return Ok( errorResponse);
+            }
+   
+            var response = new ResponseModel
+            {
+                StatusCode = 200,
+                Data = result,
+                Message = "Login successful"
+            };
+            return Ok(response);
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDetail userDetail)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var response = new ResponseModel
+                {
+                    StatusCode = 400,
+                    Data = null,
+                    Message = "Invalid request"
+                };
+                return BadRequest(response);
             }
 
             var result = await _userService.RegisterUser(userDetail);
             if (result > 0)
             {
-                return Ok();
+                var response = new ResponseModel
+                {
+                    StatusCode = 200,
+                    Data = null,
+                    Message = "User registered successfully"
+                };
+                return Ok(response);
+
             }
 
-            return StatusCode(500, "An error occurred while registering the user.");
+            var errorResponse = new ResponseModel
+            {
+                StatusCode = 500,
+                Data = null,
+                Message = "An error occurred while registering the user."
+            };
+            return StatusCode(500, errorResponse);
         }
 
         [HttpPut("update")]
@@ -52,33 +94,58 @@ namespace CollegeManagementAPI.net.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var response = new ResponseModel
+                {
+                    StatusCode = 400,
+                    Data = null,
+                    Message = "Invalid request"
+                };
+                return BadRequest(response);
             }
 
             var result = await _userService.UpdateUser(userDetail);
             if (result > 0)
             {
-                return Ok("User Updated Succesfully.");
+                var response = new ResponseModel
+                {
+                    StatusCode = 200,
+                    Data = null,
+                    Message = "User updated successfully"
+                };
+                return Ok(response);
             }
 
-            return StatusCode(500, "An error occurred while updating the user.");
+            var errorResponse = new ResponseModel
+            {
+                StatusCode = 500,
+                Data = null,
+                Message = "An error occurred while updating the user."
+            };
+            return StatusCode(500, errorResponse);
         }
 
         [HttpDelete("delete")]
-
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _userService.DeleteUser(id);
             if (result > 0)
             {
-                return Ok("User Deleted Succesfully");
+                var response = new ResponseModel
+                {
+                    StatusCode = 200,
+                    Data = null,
+                    Message = "User deleted successfully"
+                };
+                return Ok(response);
             }
 
-            return StatusCode(500, "An error occurred while deleting the user.");
+            var errorResponse = new ResponseModel
+            {
+                StatusCode = 500,
+                Data = null,
+                Message = "An error occurred while deleting the user."
+            };
+            return StatusCode(500, errorResponse);
         }
-
     }
 }
-
-
-
