@@ -1,0 +1,115 @@
+<!-- <div style="display: flex; justify-content: center; align-items: center; height: 100vh;"> -->
+
+<form [formGroup]="signupMat" (ngSubmit)="onSubmit()" style="display: grid;height: 100vh;align-items: center;">
+    <mat-card class="container mt-3">
+        <mat-card-header>
+            <mat-card-title>SignUp Form</mat-card-title>
+            <mat-card-subtitle>Please fill details carefully</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="row">
+                <!-- firstname -->
+                <mat-form-field class="col-6" appearance="outline">
+                    <input matInput placeholder="FirstName" formControlName="firstName">
+                    <mat-error *ngIf="getControl('firstName')?.errors?.['required']">FirstName is required</mat-error>
+                    <mat-error *ngIf="getControl('firstName')?.errors?.['maxlength']">FirstName must be at max 20
+                        characters</mat-error>
+                </mat-form-field>
+                <!-- lastname -->
+                <mat-form-field class="col-6" appearance="outline">
+                    <input matInput placeholder="LastName" formControlName="lastName">
+                    <mat-error *ngIf="getControl('lastName')?.errors?.['required']">LastName is required</mat-error>
+                    <mat-error *ngIf="getControl('lastName')?.errors?.['maxlength']">LastName must be at max 20
+                        characters</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <!-- email -->
+                <mat-form-field class="col-6" appearance="outline">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput placeholder="pat@example.com" formControlName="email" required>
+                    <mat-error *ngIf="getControl('email')?.errors?.['required']">Email is required</mat-error>
+                    <mat-error *ngIf="getControl('email')?.errors?.['email']">Email is invalid</mat-error>
+                </mat-form-field>
+                <!-- phone-->
+                <mat-form-field class="col-6" appearance="outline">
+                    <input matInput placeholder="Phone" formControlName="phoneNumber" mask="000-000-0000"
+                        [showMaskTyped]="true">
+                    <mat-icon matSuffix>phone</mat-icon>
+                    <mat-error *ngIf="getControl('phoneNumber')?.errors?.['required']">Phone No is required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <!-- Country -->
+                <mat-form-field class="col" appearance="outline">
+                    <mat-label>Select Country</mat-label>
+                    <mat-select formControlName="country">
+                        <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="getControl('country')?.hasError('required')">Please choose a Country</mat-error>
+                </mat-form-field>
+                <!-- States  -->
+                <mat-form-field class="col" appearance="outline">
+                    <mat-label>Select State</mat-label>
+                    <mat-select formControlName="state">
+                        <mat-option *ngFor="let state of getStates()" [value]="state.id">{{state.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="getControl('state')?.hasError('required')">Please choose a State</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="row my-3">
+                <!-- gender  -->
+                <mat-label>Gender</mat-label>
+                <mat-radio-group formControlName="gender">
+                    <mat-radio-button value="male">Male</mat-radio-button>
+                    <mat-radio-button value="female">Female</mat-radio-button>
+                    <!-- <mat-error *ngIf="getControl('gender')?.errors?.['required'] && getControl('password')?.touched">Gender is required</mat-error> -->
+                </mat-radio-group>
+            </div>
+            <div class="row">
+                <!-- password  -->
+                <mat-form-field class="col-6" appearance="outline">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password"
+                        formControlName="password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+
+                    </button>
+                    <mat-error *ngIf="getControl('password')?.errors?.['required']">Password is required</mat-error>
+                    <mat-error *ngIf="getControl('password')?.errors?.['pattern']">
+                        Password must contain at least 6 characters, one uppercase letter, one lowercase letter, and one
+                        number
+                    </mat-error>
+                </mat-form-field>
+                <!-- confirm password  -->
+                <mat-form-field class="col-6" appearance="outline">
+                    <mat-label>Confirm password</mat-label>
+                    <input matInput [type]="hide1 ? 'password' : 'text'" placeholder="confirmPassword"
+                        formControlName="confirmPassword">
+                    <button mat-icon-button matSuffix (click)="hide1 = !hide1" type="button">
+                        <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="getControl('confirmPassword')?.errors?.['required']">Confirm Password is
+                        required</mat-error>
+                    <mat-error *ngIf="getControl('confirmPassword')?.errors?.['passwordMismatch']">Password do not
+                        match</mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+            <button mat-raised-button color="primary" type="submit" [disabled]="signupMat.invalid">Submit</button>
+        </mat-card-actions>
+
+    </mat-card>
+        <!-- Loading overlay -->
+        <div *ngIf="loading" class="loading-overlay">
+            <mat-spinner diameter="32"></mat-spinner>
+            <p>Loading...</p>
+        </div>
+    <div class="container" style="display: flex; justify-content: center; align-items: center; margin: 0px auto;">
+        <span>Already have a account? </span>
+        <a mat-button routerLink="/auth/login">Login</a>
+    </div>
+</form>     

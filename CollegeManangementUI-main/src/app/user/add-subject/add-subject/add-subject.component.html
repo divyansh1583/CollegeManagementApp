@@ -1,0 +1,50 @@
+<div class=" text-center my-3">
+
+    <!-- Add button -->
+    <button mat-raised-button color="primary" (click)="addEditsubject()">Add subject</button>
+  
+    <!-- If 0 subjects -->
+    <div *ngIf="subjects.length === 0">
+      <p class="text-primary lead my-3">No Record!</p>
+    </div>
+  
+  </div>
+  
+  
+  <!-- if there are subjects -->
+  <div *ngIf="subjects.length > 0">
+    <!-- table -->
+    <div class="container" style="width: 65%;">
+      <table class="table shadow">
+        <thead class="text-center">
+          <tr>
+            <th *ngFor="let column of displayedColumns" scope="col">{{column | titlecase}}</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr *ngFor="let subject of subjects">
+            <td>{{subject.id}}</td>
+            <td>{{subject.name}}</td>
+            <td>{{findCourseName(subject.id)}}</td>
+            <td>{{subject.semester}}</td>
+            <td>{{subject.marks}}</td>
+            <td>
+              <button mat-icon-button (click)="addEditsubject(subject)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="deletesubject(subject.id)"><mat-icon>delete</mat-icon></button>
+  
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #deleteDialog let-dialog="dialogRef">
+      <h1 mat-dialog-title>Confirm Delete</h1>
+      <div mat-dialog-content>
+        Are you sure you want to delete this subject?
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button (click)="dialog.close()">Cancel</button>
+        <button mat-button color="warn" (click)="dialog.close(true)">Delete</button>
+      </div>
+    </ng-template>

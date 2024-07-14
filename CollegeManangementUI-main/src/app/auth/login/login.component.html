@@ -1,0 +1,53 @@
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <mat-card class="container" style="width: 350px;">
+      <mat-card-header style="margin: 2px auto;">
+        <mat-card-title class="text-center mb-4">Login</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row">
+
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" id="email" formControlName="email" appNoSpace>
+            <mat-error *ngIf="getControl('email')?.invalid && getControl('email')?.touched">
+              <span *ngIf="getControl('email')?.errors?.['required']">Email is required.</span>
+              <span *ngIf="getControl('email')?.errors?.['email']">Enter a valid email.</span>
+              <mat-error *ngIf="getControl('email')?.errors?.['noSpace']">No spaces allowed.</mat-error>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+
+          <mat-form-field appearance="outline" class="col">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password"
+              appNoSpace>
+            <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="getControl('password')?.errors?.['required']">Password is required.</mat-error>
+
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions style="margin: 1px auto;">
+        <button mat-raised-button color="primary" type="submit">Login</button>
+      </mat-card-actions>
+
+    </mat-card>
+    <!-- Loading overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+      <mat-spinner diameter="32"></mat-spinner>
+      <p>Loading...</p>
+    </div>
+    <div class="container" style="display: flex; justify-content: center; align-items: center; margin: 10px auto;">
+      <span>Don't have a account? </span>
+      <a mat-button routerLink="/auth/signup">Sign Up</a>
+    </div>
+
+  </form>
+</div>

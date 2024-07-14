@@ -1,0 +1,51 @@
+<!-- <h1 mat-dialog-title>{{ data.subject.id? 'Edit subject' : 'Add subject' }}</h1> -->
+<div mat-dialog-content>
+    <form [formGroup]="subjectForm">
+        <div class="row my-2">
+            
+                <mat-form-field appearance="outline" class="col">
+                    <mat-label>Subject Name</mat-label>
+                    <input matInput formControlName="name">
+                    <mat-error *ngIf="subjectForm.get('name')?.hasError('required')">
+                        Subject name is required
+                    </mat-error>
+                </mat-form-field>
+         
+
+            <mat-form-field class="col" appearance="outline">
+                <mat-label>Select Course</mat-label>
+                <mat-select formControlName="courseId">
+                    <mat-option *ngFor="let course of courses" [value]="course.id">{{course.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="subjectForm.get('courseId')?.hasError('required')">Please choose a
+                    courseName</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Semester</mat-label>
+                    <input matInput formControlName="semester">
+                    <mat-error *ngIf="subjectForm.get('semester')?.hasError('required')">
+                        Semester is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Marks</mat-label>
+                    <input matInput formControlName="marks" type="number">
+                    <mat-error *ngIf="subjectForm.get('marks')?.hasError('required')">Marks is required</mat-error>
+                    <mat-error *ngIf="subjectForm.get('marks')?.hasError('marksRange')">Marks must be between 0 and 100</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button (click)="onSave()" color="primary" [disabled]="subjectForm.invalid">
+        Save
+    </button>
+</div>
