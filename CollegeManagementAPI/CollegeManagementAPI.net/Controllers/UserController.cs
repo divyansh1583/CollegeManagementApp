@@ -32,8 +32,8 @@ namespace CollegeManagementAPI.net.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginDetails loginDetails)
         {
-            var result = await _userService.LoginUserAsync(loginDetails);
-            if (result == null || result.Password != loginDetails.Password)
+            var user = await _userService.LoginUserAsync(loginDetails);
+            if (user == null || user.Password != loginDetails.Password)
             {
                 var errorResponse = new ResponseModel
                 {
@@ -41,13 +41,14 @@ namespace CollegeManagementAPI.net.Controllers
                     Data = null,
                     Message = "Invalid Email or Password!"
                 };
-                return Ok( errorResponse);
+                return Ok(errorResponse);
             }
-   
+
+            var token = _userService.GenerateToken(loginDetails);
             var response = new ResponseModel
             {
                 StatusCode = 200,
-                Data = result,
+                Data = new { Token = token, User = user },
                 Message = "Login successful"
             };
             return Ok(response);

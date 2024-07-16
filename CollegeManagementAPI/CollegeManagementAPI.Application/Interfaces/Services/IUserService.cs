@@ -10,7 +10,7 @@ namespace CollegeManagementAPI.Application.Interfaces.Services
         Task<int> RegisterUser(UserDetail userDetail);
         Task<int> UpdateUser(UserDetail userDetail);
         Task<int> DeleteUser(int userId);
-
+        string GenerateToken(LoginDetails user);
     }
 
 
