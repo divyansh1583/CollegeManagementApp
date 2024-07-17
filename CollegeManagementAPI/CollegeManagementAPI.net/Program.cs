@@ -1,10 +1,7 @@
 using CollegeManagementAPI.Application.Interfaces.Repositories;
 using CollegeManagementAPI.Application.Interfaces.Services;
 using CollegeManagementAPI.Infrastructure.Data;
-using CollegeManagementAPI.Infrastructure.Implementation.Repositories;
-using CollegeManagementAPI.Infrastructure.Implementation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 

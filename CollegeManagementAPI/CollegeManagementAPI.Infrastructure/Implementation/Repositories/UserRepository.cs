@@ -1,59 +1,66 @@
-﻿using Dapper;
-using CollegeManagementAPI.Application.Interfaces.Repositories;
+﻿using CollegeManagementAPI.Application.Interfaces.Repositories;
+using CollegeManagementAPI.Domain.Common_Models;
 using CollegeManagementAPI.Domain.Entities;
 using CollegeManagementAPI.Infrastructure.Data;
-using System.Threading.Tasks;
-using System.Data;
+using Dapper;
 
-namespace CollegeManagementAPI.Infrastructure.Implementation.Repositories
+public class UserRepository : IUserRepository
 {
-    public class UserRepository : IUserRepository
+    private readonly DapperContext _context;
+
+    public UserRepository(DapperContext context)
     {
-        private readonly DapperContext _context;
-        //private readonly DbService _dbService;
+        _context = context;
+    }
 
-
-        public UserRepository(
-            DapperContext context
-            //DbService dbService
-            )
-        {
-            _context = context;
-            //_dbService = dbService;
-        }
-
-        // Getting users list
-        public async Task<IEnumerable<UserDetail>> GetUsersAsync()
+    public async Task<ResponseModel> GetUsersAsync()
+    {
+        try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "exec dc_getuserdetails";
-
-                return await connection.QueryAsync<UserDetail>(query);
+                var users = await connection.QueryAsync<UserDetail>(query);
+                return new ResponseModel { StatusCode = 200, Data = users, Message = ResponseMessages.UsersRetrievedSuccessfully };
             }
-            //return await _dbService.QueryAsync("EXEC DC_GetUserDetails");
-
         }
-        //getting user by email
-        public async Task<LoginDetails> GetUserByEmailAsync(string email)
+        catch (Exception ex)
+        {
+            return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.ErrorOccurred };
+        }
+    }
+
+    public async Task<ResponseModel> GetUserByEmailAsync(string email)
+    {
+        try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "SELECT * FROM DC_LoginCredentials lc WHERE Email=@Email";
-
-                var result = await connection.QueryAsync<LoginDetails>(query, new { Email = email });
-
-                return result.FirstOrDefault();
+                var user = await connection.QueryAsync<LoginDetails>(query, new { Email = email });
+                if (user.Any())
+                {
+                    return new ResponseModel { StatusCode = 200, Data = user.FirstOrDefault(), Message = ResponseMessages.UserFound };
+                }
+                else
+                {
+                    return new ResponseModel { StatusCode = 404, Data = null, Message = ResponseMessages.UserNotFound };
+                }
             }
         }
+        catch (Exception ex)
+        {
+            return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.ErrorOccurred };
+        }
+    }
 
-        // Running DC_InsertUserAndLoginCredentials Stored Procedure
-        public async Task<int> InsertUserAndLoginCredentials(UserDetail userDetail)
+    public async Task<ResponseModel> InsertUserAndLoginCredentials(UserDetail userDetail)
+    {
+        try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "EXEC DC_InsertUserAndLoginCredentials @FirstName, @LastName, @Email, @PhoneNumber, @CountryId, @StateId, @Gender, @Password";
-
                 var parameters = new
                 {
                     userDetail.FirstName,
@@ -65,18 +72,30 @@ namespace CollegeManagementAPI.Infrastructure.Implementation.Repositories
                     userDetail.Gender,
                     userDetail.Password
                 };
-
-                return await connection.ExecuteAsync(query, parameters);
+                var result = await connection.ExecuteAsync(query, parameters);
+                if (result > 0)
+                {
+                    return new ResponseModel { StatusCode = 201, Data = userDetail, Message = ResponseMessages.UserCreatedSuccessfully };
+                }
+                else
+                {
+                    return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.CreateError };
+                }
             }
         }
+        catch (Exception ex)
+        {
+            return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.CreateError };
+        }
+    }
 
-        // Update user
-        public async Task<int> UpdateUserAsync(UserDetail userDetail)
+    public async Task<ResponseModel> UpdateUserAsync(UserDetail userDetail)
+    {
+        try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "EXEC DC_UpdateUserAndLoginCredentials @UserId, @FirstName, @LastName, @Email, @PhoneNumber, @CountryId, @StateId, @Gender, @Password";
-
                 var parameters = new
                 {
                     userDetail.UserId,
@@ -89,22 +108,45 @@ namespace CollegeManagementAPI.Infrastructure.Implementation.Repositories
                     userDetail.Gender,
                     userDetail.Password
                 };
-
-                return await connection.ExecuteAsync(query, parameters);
+                var result = await connection.ExecuteAsync(query, parameters);
+                if (result > 0)
+                {
+                    return new ResponseModel { StatusCode = 200, Data = userDetail, Message = ResponseMessages.UserUpdatedSuccessfully };
+                }
+                else
+                {
+                    return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.UpdateError };
+                }
             }
         }
+        catch (Exception ex)
+        {
+            return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.UpdateError };
+        }
+    }
 
-        // Delete user
-        public async Task<int> DeleteUserAsync(int id)
+    public async Task<ResponseModel> DeleteUserAsync(int id)
+    {
+        try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "EXEC DC_DeleteUserAndLoginCredentials @UserId";
-
                 var parameters = new { UserId = id };
-
-                return await connection.ExecuteAsync(query, parameters);
+                var result = await connection.ExecuteAsync(query, parameters);
+                if (result > 0)
+                {
+                    return new ResponseModel { StatusCode = 200, Data = null, Message = ResponseMessages.UserDeletedSuccessfully };
+                }
+                else
+                {
+                    return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.DeleteError };
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.DeleteError };
         }
     }
 }

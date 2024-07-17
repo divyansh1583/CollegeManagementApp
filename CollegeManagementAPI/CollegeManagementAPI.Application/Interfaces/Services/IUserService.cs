@@ -1,17 +1,15 @@
 ﻿using CollegeManagementAPI.Application.DTOs;
 using CollegeManagementAPI.Domain.Entities;
+using CollegeManagementAPI.Domain.Common_Models;
 
 namespace CollegeManagementAPI.Application.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDetail>> GetUsersAsync();
-        Task<LoginDetails> LoginUserAsync(LoginDetails loginDetails);
-        Task<int> RegisterUser(UserDetail userDetail);
-        Task<int> UpdateUser(UserDetail userDetail);
-        Task<int> DeleteUser(int userId);
-        string GenerateToken(LoginDetails user);
+        Task<ResponseModel> GetUsersAsync();
+        Task<ResponseModel> LoginUserAsync(LoginDetails loginDetails);
+        Task<ResponseModel> RegisterUser(UserDetail userDetail);
+        Task<ResponseModel> UpdateUser(UserDetail userDetail);
+        Task<ResponseModel> DeleteUser(int userId);
     }
-
-
 }

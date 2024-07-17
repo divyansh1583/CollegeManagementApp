@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CollegeManagementAPI.Application.DTOs;
 using CollegeManagementAPI.Domain.Entities;
+using CollegeManagementAPI.Domain.Common_Models;
 
 namespace CollegeManagementAPI.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<UserDetail>> GetUsersAsync();
-        Task<int> InsertUserAndLoginCredentials(UserDetail userDetail);
-        Task<LoginDetails> GetUserByEmailAsync(string email);
-        Task<int> UpdateUserAsync(UserDetail userDetail);
-        Task<int> DeleteUserAsync(int id);
+        Task<ResponseModel> GetUsersAsync();
+        Task<ResponseModel> InsertUserAndLoginCredentials(UserDetail userDetail);
+        Task<ResponseModel> GetUserByEmailAsync(string email);
+        Task<ResponseModel> UpdateUserAsync(UserDetail userDetail);
+        Task<ResponseModel> DeleteUserAsync(int id);
     }
-
-
 }

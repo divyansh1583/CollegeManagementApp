@@ -9,7 +9,7 @@ import { RegisterDetail } from '../models/registerDetails.model';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7097/api/User'; // Replace with your API URL
+  private apiUrl = 'https://localhost:7097'; // Replace with your API URL
 
   constructor(private http: HttpClient) { }
 
