@@ -19,7 +19,7 @@ public class UserService : IUserService
 
     public async Task<ResponseModel> LoginUserAsync(LoginDetails loginDetails)
     {
-        return await _userRepository.GetUserByEmailAsync(loginDetails.Email);
+        return await _userRepository.GetUserByEmailAsync(loginDetails);
     }
 
     public async Task<ResponseModel> RegisterUser(UserDetail userDetail)

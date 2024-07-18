@@ -19,7 +19,7 @@ public class UserRepository : IUserRepository
         {
             using (var connection = _context.CreateConnection())
             {
-                var query = "exec dc_getuserdetails";
+                var query = "EXEC DC_GetUserDetails";
                 var users = await connection.QueryAsync<UserDetail>(query);
                 return new ResponseModel { StatusCode = 200, Data = users, Message = ResponseMessages.UsersRetrievedSuccessfully };
             }
@@ -30,17 +30,25 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public async Task<ResponseModel> GetUserByEmailAsync(string email)
+    public async Task<ResponseModel> GetUserByEmailAsync(LoginDetails loginDetails)
     {
         try
         {
             using (var connection = _context.CreateConnection())
             {
                 var query = "SELECT * FROM DC_LoginCredentials lc WHERE Email=@Email";
-                var user = await connection.QueryAsync<LoginDetails>(query, new { Email = email });
-                if (user.Any())
+                var users = await connection.QueryAsync<LoginDetails>(query, new { Email = loginDetails.Email });
+                if (users.Any())
                 {
-                    return new ResponseModel { StatusCode = 200, Data = user.FirstOrDefault(), Message = ResponseMessages.UserFound };
+                    var user = users.FirstOrDefault();
+                    if (user.Password == loginDetails.Password)
+                    {
+                        return new ResponseModel { StatusCode = 200, Data = user, Message = ResponseMessages.UserFound };
+                    }
+                    else
+                    {
+                        return new ResponseModel { StatusCode = 401, Data = null, Message = ResponseMessages.InvaildPassword };
+                    }
                 }
                 else
                 {
@@ -149,4 +157,5 @@ public class UserRepository : IUserRepository
             return new ResponseModel { StatusCode = 500, Data = null, Message = ResponseMessages.DeleteError };
         }
     }
+
 }

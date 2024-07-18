@@ -8,7 +8,7 @@ namespace CollegeManagementAPI.Application.Interfaces.Repositories
     {
         Task<ResponseModel> GetUsersAsync();
         Task<ResponseModel> InsertUserAndLoginCredentials(UserDetail userDetail);
-        Task<ResponseModel> GetUserByEmailAsync(string email);
+        Task<ResponseModel> GetUserByEmailAsync(LoginDetails loginDetails);
         Task<ResponseModel> UpdateUserAsync(UserDetail userDetail);
         Task<ResponseModel> DeleteUserAsync(int id);
     }

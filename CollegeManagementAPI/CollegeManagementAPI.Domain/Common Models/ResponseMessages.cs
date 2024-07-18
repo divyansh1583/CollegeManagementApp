@@ -10,4 +10,8 @@
     public static string UserDeletedSuccessfully => "User deleted successfully";
     public static string DeleteError => "Delete failed";
     public static string ErrorOccurred => "An error occurred";
+    public static string InvaildPassword => "Incorrect Password";
+    public static string InvaildFormat => "Invalid Format";
+
+
 }

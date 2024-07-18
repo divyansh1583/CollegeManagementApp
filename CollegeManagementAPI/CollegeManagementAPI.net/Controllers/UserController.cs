@@ -18,26 +18,42 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(LoginDetails loginDetails)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginDetails loginDetails)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         return Ok(await _userService.LoginUserAsync(loginDetails));
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserDetail userDetail)
+    public async Task<IActionResult> Register([FromBody] UserDetail userDetail)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         return Ok(await _userService.RegisterUser(userDetail));
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> Update(UserDetail userDetail)
+    public async Task<IActionResult> Update([FromBody] UserDetail userDetail)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         return Ok(await _userService.UpdateUser(userDetail));
     }
 
-    [HttpDelete("delete")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         return Ok(await _userService.DeleteUser(id));
     }
 }
