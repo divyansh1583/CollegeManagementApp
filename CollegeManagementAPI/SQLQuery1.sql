@@ -123,7 +123,7 @@
 		EXEC DC_InsertUserAndLoginCredentials 'Jane', 'Smith',	'jane.smith@example.com','0987654321',2,2,'Female',	'Password456!';
 		EXEC DC_UpdateUserAndLoginCredentials 1, 'Jane', 'Smith', 'jane.smith@example.com', '0987654321', 2, 2, 'Female', 'NewPassword123!';
 		EXEC DC_DeleteUserAndLoginCredentials 1;
-		EXEC DC_GetUserDetails;
+			 ;
 
 
 		use test;
