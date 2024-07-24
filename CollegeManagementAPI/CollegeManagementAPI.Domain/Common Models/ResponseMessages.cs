@@ -1,7 +1,7 @@
 ﻿public static class ResponseMessages
 {
     public static string UsersRetrievedSuccessfully => "Users retrieved successfully";
-    public static string UserFound => "User found";
+    public static string UserFound => "User Log in Succesful";
     public static string UserNotFound => "User not found";
     public static string UserCreatedSuccessfully => "User created successfully";
     public static string CreateError => "Create failed";

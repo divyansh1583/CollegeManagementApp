@@ -19,7 +19,8 @@
     constructor(
       private router: Router,
       private toastr: ToastrService,
-      private loginService: LoginService
+      private loginService: LoginService,
+
 
     ) {
       // Subscribe to router events
@@ -40,13 +41,14 @@
       this.loginDetails.password = this.loginForm.value.password!;
       this.loginService.login(this.loginDetails).subscribe(res => {
         this.loading = false; // Set loading to false when service is completed
-        if (res.statusCode === 200) {
+        if (res.statusCode == 200) {
           console.log(res);
           localStorage.setItem('login_token', res.data.token);
           this.router.navigate(['/user']);
           this.toastr.success(res.message);
         }
         else {
+          console.log(res);
           this.toastr.error(res.message);
         }
       });

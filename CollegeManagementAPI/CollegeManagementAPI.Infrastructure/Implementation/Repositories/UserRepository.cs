@@ -47,7 +47,7 @@ public class UserRepository : IUserRepository
                     var user = users.FirstOrDefault();
                     if (user.Password == loginDetails.Password)
                     {
-                        var token = _tokenService.GenerateToken(loginDetails);
+                        var token = _tokenService.GenerateToken();
                         return new ResponseModel { StatusCode = 200, Data = new { Token = token, User = user }, Message = ResponseMessages.UserFound };
                     }
                     else

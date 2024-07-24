@@ -19,7 +19,7 @@ namespace CollegeManagementAPI.Infrastructure.Implementation.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(LoginDetails user)
+        public string GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
