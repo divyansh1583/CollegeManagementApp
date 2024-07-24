@@ -42,7 +42,7 @@
         this.loading = false; // Set loading to false when service is completed
         if (res.statusCode === 200) {
           console.log(res);
-          localStorage.setItem('login_token', res.data.Token);
+          localStorage.setItem('login_token', res.data.token);
           this.router.navigate(['/user']);
           this.toastr.success(res.message);
         }

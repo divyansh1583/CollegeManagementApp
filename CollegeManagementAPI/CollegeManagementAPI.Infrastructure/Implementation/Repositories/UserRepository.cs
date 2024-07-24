@@ -1,16 +1,20 @@
 ﻿using CollegeManagementAPI.Application.Interfaces.Repositories;
+using CollegeManagementAPI.Application.Interfaces.Services;
 using CollegeManagementAPI.Domain.Common_Models;
 using CollegeManagementAPI.Domain.Entities;
 using CollegeManagementAPI.Infrastructure.Data;
+using CollegeManagementAPI.Infrastructure.Implementation.Services;
 using Dapper;
 
 public class UserRepository : IUserRepository
 {
     private readonly DapperContext _context;
+    private readonly TokenService _tokenService;
 
-    public UserRepository(DapperContext context)
+    public UserRepository(DapperContext context, TokenService tokenService)
     {
         _context = context;
+        _tokenService = tokenService;
     }
 
     public async Task<ResponseModel> GetUsersAsync()
@@ -43,7 +47,8 @@ public class UserRepository : IUserRepository
                     var user = users.FirstOrDefault();
                     if (user.Password == loginDetails.Password)
                     {
-                        return new ResponseModel { StatusCode = 200, Data = user, Message = ResponseMessages.UserFound };
+                        var token = _tokenService.GenerateToken(loginDetails);
+                        return new ResponseModel { StatusCode = 200, Data = new { Token = token, User = user }, Message = ResponseMessages.UserFound };
                     }
                     else
                     {

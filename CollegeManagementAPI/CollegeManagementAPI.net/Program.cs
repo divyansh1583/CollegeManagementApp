@@ -1,6 +1,7 @@
 using CollegeManagementAPI.Application.Interfaces.Repositories;
 using CollegeManagementAPI.Application.Interfaces.Services;
 using CollegeManagementAPI.Infrastructure.Data;
+using CollegeManagementAPI.Infrastructure.Implementation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -33,6 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Register repositories and services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<TokenService>();
 //builder.Services.AddScoped<IDbService, DbService>();
 
 var app = builder.Build();
